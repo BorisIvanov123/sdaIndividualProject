@@ -1,5 +1,9 @@
-# CSV files
-*.csv
+# --- Ignore all raw data ---
+data/raw_data/*
+!data/raw_data/.gitkeep
+
+# --- Keep processed data (needed for the Streamlit app) ---
+!data/processed_data/*
 
 # Excel files (in case you have any)
 *.xlsx
@@ -54,9 +58,7 @@ Thumbs.db
 ehthumbs.db
 Desktop.ini
 
-# Data directories (but keep the folders)
-data/raw_data/*.csv
-data/processed_data/*.csv
+# Additional directories
 clean_data/
 
 # Logs
