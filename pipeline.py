@@ -226,7 +226,7 @@ def main():
         print("\n" + "=" * 80)
         print("PIPELINE COMPLETED SUCCESSFULLY")
         print("=" * 80)
-        print("\n📊 SUMMARY:")
+        print("\n SUMMARY:")
         print(f"  • Orders processed: {len(order_header_df):,}")
         print(f"  • Line items: {len(order_line_items_df):,}")
         print(f"  • Sessions: {len(sessions_dim):,}")
@@ -241,7 +241,7 @@ def main():
 
     except Exception as e:
         print("\n" + "=" * 80)
-        print("❌ PIPELINE FAILED")
+        print(" PIPELINE FAILED")
         print("=" * 80)
         print(f"\nError: {str(e)}")
         print("\nPlease check:")
