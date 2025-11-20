@@ -83,7 +83,7 @@ def summarize_exit_points(exit_sessions: pd.DataFrame, top_n: int = 10) -> dict:
         top_n: Number of top items to return
 
     Returns:
-        Dictionary with top exit pages, types, and URLs
+        Dictionary with top exit app_sections, types, and URLs
     """
     summary = {
         'top_exit_pages': exit_sessions['page'].value_counts().head(top_n),
@@ -95,7 +95,7 @@ def summarize_exit_points(exit_sessions: pd.DataFrame, top_n: int = 10) -> dict:
 
     print(f"\n📊 EXIT POINTS SUMMARY:")
     print(f"   Total exit sessions: {summary['total_exits']:,}")
-    print(f"\n   Top exit pages:")
+    print(f"\n   Top exit app_sections:")
     for i, (page, count) in enumerate(summary['top_exit_pages'].head(5).items(), 1):
         print(f"      {i}. {page}: {count:,}")
 
