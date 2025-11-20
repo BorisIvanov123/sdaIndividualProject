@@ -48,7 +48,6 @@ def render(order_header_df, sessions):
 
     st.markdown("<br>", unsafe_allow_html=True)
 
-    # ---------------------------------------------
     # DATA PREVIEW — Side-by-Side Tables
     # ---------------------------------------------
     st.markdown("### 🔍 Quick Data Preview")
