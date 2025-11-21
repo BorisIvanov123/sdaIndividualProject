@@ -23,6 +23,8 @@ def load_all_data():
     sessions = pd.read_parquet(base_processed / "sessions.parquet")
     cohorts = pd.read_parquet(base_processed / "cohorts.parquet")
     country_kpis = pd.read_parquet(base_processed / "country_kpis.parquet")
+    forecast_df = pd.read_parquet(base_processed / "xgb_forecast_ci.parquet")
+    weekly_history = pd.read_parquet(base_processed / "weekly_history.parquet")
 
     return (
         order_header_df,
@@ -31,4 +33,7 @@ def load_all_data():
         sessions,
         cohorts,
         country_kpis,
+        forecast_df,
+        weekly_history,
     )
+
