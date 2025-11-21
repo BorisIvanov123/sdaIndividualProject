@@ -1,9 +1,10 @@
 # app.py
 
 import streamlit as st
+from pathlib import Path
 from utils.loaders import load_all_data
 
-# Correct imports: import the render function from each section's render.py file
+# Correct imports
 from app_sections.overview.render import render as overview_render
 from app_sections.country_kpis.render import render as country_render
 from app_sections.seasonality import render as seasonality_render
@@ -22,7 +23,17 @@ PAGES = {
     "Forecast (DL)": forecast_render,
 }
 
+# 🔥 GLOBAL CSS LOADER
+def load_global_css():
+    css_path = Path("app_components/styles/global.css")
+    if css_path.exists():
+        with open(css_path) as f:
+            st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
+
+
 def main():
+    load_global_css()   # 🌍 load global styling here
+
     st.sidebar.title("Navigation")
     selection = st.sidebar.radio("Go to", list(PAGES.keys()))
 
