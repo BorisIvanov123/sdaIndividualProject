@@ -7,7 +7,7 @@ from utils.loaders import load_all_data
 # Correct imports
 from app_sections.overview.render import render as overview_render
 from app_sections.country_kpis.render import render as country_render
-from app_sections.seasonality import render as seasonality_render
+from app_sections.seasonality.render import render as seasonality_render   # ✔ FIXED
 from app_sections.funnel import render as funnel_render
 from app_sections.repeat_buyers import render as repeat_render
 from app_sections.forecast import render as forecast_render
@@ -32,7 +32,7 @@ def load_global_css():
 
 
 def main():
-    load_global_css()   # 🌍 load global styling here
+    load_global_css()
 
     st.sidebar.title("Navigation")
     selection = st.sidebar.radio("Go to", list(PAGES.keys()))
