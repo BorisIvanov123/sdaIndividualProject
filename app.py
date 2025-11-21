@@ -9,7 +9,7 @@ from app_sections.overview.render import render as overview_render
 from app_sections.country_kpis.render import render as country_render
 from app_sections.seasonality.render import render as seasonality_render
 from app_sections.funnel.render import render as funnel_render
-from app_sections.repeat_buyers import render as repeat_render
+from app_sections.repeat_buyers.render import render as repeat_render
 from app_sections.forecast import render as forecast_render
 
 st.set_page_config(page_title="Sales Management Dashboard", layout="wide")
@@ -19,7 +19,7 @@ PAGES = {
     "Country KPIs": country_render,
     "Seasonality": seasonality_render,
     "Funnel": funnel_render,
-    "Repeat Buyers": repeat_render,
+    "Repeat Buyers": repeat_render,   # ✔ uses correct handler
     "Forecast (DL)": forecast_render,
 }
 
@@ -44,7 +44,7 @@ def main():
         line_items,
         sessions,
         cohorts,
-        country_kpis
+        country_kpis,
     ) = load_all_data()
 
     # ROUTER
