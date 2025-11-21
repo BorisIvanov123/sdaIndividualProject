@@ -1,32 +1,39 @@
+# app_sections/country_kpis/render.py
+
 import streamlit as st
 import pandas as pd
 
+# Global components
 from app_components.cards import metric_card
 from app_components.tables import data_table
+
+# Layout components
 from app_components.layout import centered_title
-from app_components.intro import intro_section
+
+# Local components
+from .components.country_kpis_intro_html import FULL_COUNTRY_KPIS_HTML
 
 
 def render(country_kpis: pd.DataFrame):
     """
     Render the Country KPIs section with metrics, table, and charts.
+    Uses reusable components from app_components.
 
     Args:
         country_kpis: DataFrame containing country-level KPI data
     """
 
-    # ---------------------------------------------
-    # TITLE & INTRO
-    # ---------------------------------------------
+    # =======================
+    # PAGE HEADER
+    # =======================
     centered_title("🌍 Country KPIs")
 
-    intro_section(
-        text="Performance overview across countries: revenue, orders & conversion rates."
-    )
+    # Full long intro box
+    st.markdown(FULL_COUNTRY_KPIS_HTML, unsafe_allow_html=True)
 
-    # ---------------------------------------------
-    # Validate Input
-    # ---------------------------------------------
+    # =======================
+    # VALIDATE INPUT
+    # =======================
     if country_kpis is None or country_kpis.empty:
         st.warning("⚠️ Country KPI dataset is empty or missing.")
         return
@@ -38,9 +45,9 @@ def render(country_kpis: pd.DataFrame):
     if "revenue_eur" in df.columns:
         df = df.sort_values("revenue_eur", ascending=False)
 
-    # ==============================================
-    # KPI CARDS (using global component)
-    # ==============================================
+    # =======================
+    # KPI CARDS
+    # =======================
     total_revenue = df["revenue_eur"].sum()
     total_orders = df["orders"].sum()
     avg_cvr = df["cvr"].mean() * 100
@@ -58,16 +65,16 @@ def render(country_kpis: pd.DataFrame):
 
     st.markdown("<br>", unsafe_allow_html=True)
 
-    # ==============================================
-    # DATA TABLE (reusable component)
-    # ==============================================
+    # =======================
+    # DATA TABLE
+    # =======================
     data_table(df.reset_index(drop=True), title="📋 Country Detail Table")
 
     st.markdown("<br>", unsafe_allow_html=True)
 
-    # ==============================================
+    # =======================
     # CHARTS
-    # ==============================================
+    # =======================
     st.markdown("### 📊 Revenue & Orders by Country")
 
     chart_df = df.set_index("country")
