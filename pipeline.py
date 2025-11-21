@@ -61,6 +61,7 @@ from modules.attribution.attribution import (
 from modules.output.export import export_tables
 from modules.config import FX_RATES
 from modules.analytics.country_kpis import compute_country_kpis
+from modules.output.parquet_sanitize import sanitize_all_for_parquet
 
 
 
@@ -199,8 +200,40 @@ def main():
         repeat_metrics = calculate_repeat_metrics(order_header_df)
         cohort_df = build_cohort_analysis(order_header_df, windows=[3, 6])
 
+
         # ====================================================================
-        # STAGE 12: EXPORT ALL DATA
+        # STAGE 12: Fixing Parquet data type issues
+        # ====================================================================
+
+        print("🔧 Fixing Parquet type issues…")
+
+        dfs_raw = {
+            'order_header': order_header_df,
+            'line_items': order_line_items_df,
+            'sessions': sessions_dim,
+            'attribution': attribution_final,
+            'funnel': funnel_df,
+            'exit_events': exit_events_df,
+            'exit_sessions': exit_sessions_df,
+            'cohorts': cohort_df,
+            'country_kpis': country_kpis_df
+        }
+
+        dfs_clean = sanitize_all_for_parquet(dfs_raw)
+
+        # Unpack cleaned versions
+        order_header_df = dfs_clean['order_header']
+        order_line_items_df = dfs_clean['line_items']
+        sessions_dim = dfs_clean['sessions']
+        attribution_final = dfs_clean['attribution']
+        funnel_df = dfs_clean['funnel']
+        exit_events_df = dfs_clean['exit_events']
+        exit_sessions_df = dfs_clean['exit_sessions']
+        cohort_df = dfs_clean['cohorts']
+        country_kpis_df = dfs_clean['country_kpis']
+
+        # ====================================================================
+        # STAGE 13: EXPORT ALL DATA
         # ====================================================================
         print("\n" + "─" * 80)
         print("STAGE 11: EXPORTING PROCESSED DATA")
@@ -217,7 +250,8 @@ def main():
                 'exit_sessions': exit_sessions_df,
                 'cohorts': cohort_df,
                 'country_kpis': country_kpis_df
-            }
+            },
+            export_csv= False
         )
 
         # ====================================================================
