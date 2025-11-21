@@ -14,6 +14,7 @@ from .components.charts.revenue_orders_chart import revenue_orders_chart
 from .components.charts.cvr_chart import cvr_chart
 
 
+
 def render(country_kpis: pd.DataFrame):
     """
     Render the Country KPIs section using modular components.
