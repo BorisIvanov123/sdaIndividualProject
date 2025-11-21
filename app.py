@@ -28,7 +28,6 @@ def main():
 
     (
         order_header_df,
-        app_clicks,
         funnel_df,
         line_items,
         sessions,
