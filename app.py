@@ -10,7 +10,9 @@ from app_sections.country_kpis.render import render as country_render
 from app_sections.seasonality.render import render as seasonality_render
 from app_sections.funnel.render import render as funnel_render
 from app_sections.repeat_buyers.render import render as repeat_render
-from app_sections.forecast import render as forecast_render
+
+# ✅ FIXED IMPORT
+from app_sections.forecast.render import render as forecast_render
 
 st.set_page_config(page_title="Sales Management Dashboard", layout="wide")
 
@@ -20,7 +22,7 @@ PAGES = {
     "Seasonality": seasonality_render,
     "Funnel": funnel_render,
     "Repeat Buyers": repeat_render,
-    "Forecast (DL)": forecast_render,
+    "Forecast (DL)": forecast_render,   # final forecast section
 }
 
 # 🔥 GLOBAL CSS LOADER
@@ -64,7 +66,8 @@ def main():
         PAGES[selection](order_header_df, cohorts)
 
     elif selection == "Forecast (DL)":
-        PAGES[selection](order_header_df)
+        # ❗ FIXED — forecast render takes NO arguments
+        PAGES[selection]()
 
 
 if __name__ == "__main__":
