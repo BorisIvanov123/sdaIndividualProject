@@ -9,6 +9,7 @@ from app_components.tables import data_table
 from .components.charts.monthly_chart import prepare_monthly_data, monthly_chart
 from .components.charts.yoy_mom_charts import yoy_chart, mom_chart
 from .components.charts.seasonal_decomposition_chart import seasonal_decomposition_chart
+from .components.charts.seasonal_heatmap import seasonal_heatmap   # <-- NEW IMPORT
 from .components.seasonality_intro_html import FULL_SEASONALITY_HTML
 
 
@@ -45,7 +46,6 @@ def render(order_header_df: pd.DataFrame):
         index=0
     )
 
-    # --- Monthly Trend chart ---
     monthly_chart(monthly, main_metric)
 
     st.markdown("<br>", unsafe_allow_html=True)
@@ -59,21 +59,23 @@ def render(order_header_df: pd.DataFrame):
     st.markdown("<br><hr><br>", unsafe_allow_html=True)
 
     # =======================
-    # SECOND SELECTOR — YoY / MoM
+    # SECOND SELECTOR — YoY / MoM / HEATMAP
     # =======================
     st.markdown("### 📊 Additional Seasonal Analysis")
 
     second_choice = st.selectbox(
         "Additional Analysis",
-        ["YoY Comparison", "MoM % Change"],
+        ["YoY Comparison", "MoM % Change", "Seasonal Heatmap"],
         index=0
     )
 
-    # Render the selected chart
     if second_choice == "YoY Comparison":
         yoy_chart(monthly, main_metric)
 
     elif second_choice == "MoM % Change":
         mom_chart(monthly, main_metric)
+
+    elif second_choice == "Seasonal Heatmap":
+        seasonal_heatmap(monthly, main_metric)
 
     st.markdown("<br>", unsafe_allow_html=True)
