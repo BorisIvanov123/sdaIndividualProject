@@ -176,68 +176,57 @@ def calculate_repeat_metrics(order_df: pd.DataFrame) -> dict:
 
     return metrics
 
-
-def build_cohort_analysis(order_df: pd.DataFrame, windows: list = [3, 6]) -> pd.DataFrame:
+def build_cohort_analysis(order_df: pd.DataFrame, max_months: int = 12) -> pd.DataFrame:
     """
-    Build cohort analytics: first purchase month vs repeat within N months.
-
-    Args:
-        order_df: Classified orders dataframe
-        windows: List of retention windows in months (default: [3, 6])
-
+    Build a full month-by-month retention matrix (Stripe/ChartMogul style).
     Returns:
-        Cohort dataframe with retention rates
+        cohort_month | size | m1 | m2 | ... | m12
     """
+
     df = order_df.copy()
 
-    # Filter to valid rows (with dates)
-    df = df[df['first_purchase_date'].notna()].copy()
+    # Ensure datetime
+    df["createdate"] = pd.to_datetime(df["createdate"], errors="coerce")
+    df["first_purchase_date"] = pd.to_datetime(df["first_purchase_date"], errors="coerce")
 
-    # Get first purchase month for each customer
-    df['cohort_month'] = df['first_purchase_date'].dt.to_period('M')
+    # Cohort month
+    df["cohort_month"] = df["first_purchase_date"].dt.to_period("M")
 
-    # Build cohort table
-    cohorts = df[df['is_first_purchase']].groupby('cohort_month').agg({
-        'customer_id': 'nunique',
-        'amount_eur': 'sum'
-    }).reset_index()
-    cohorts.columns = ['cohort_month', 'customers', 'first_purchase_revenue']
+    # VALID rows only
+    df = df[df["createdate"].notna() & df["first_purchase_date"].notna()]
 
-    # Calculate repeat rates for each window
-    for window_months in windows:
-        # For each cohort, count how many made a repeat purchase within window
-        repeat_counts = []
+    # 🔥 FIXED: Proper month difference
+    df["months_since_first"] = (
+        (df["createdate"].dt.year - df["first_purchase_date"].dt.year) * 12 +
+        (df["createdate"].dt.month - df["first_purchase_date"].dt.month)
+    )
 
-        for cohort in cohorts['cohort_month']:
-            cohort_customers = df[
-                (df['cohort_month'] == cohort) &
-                (df['is_first_purchase'])
-            ]['customer_id'].unique()
+    # Keep only non-negative months
+    df = df[df["months_since_first"] >= 0]
 
-            # Find repeat purchases within window
-            cohort_start = cohort.to_timestamp()
-            window_end = cohort_start + pd.DateOffset(months=window_months)
+    # Cohort size = users who made Month 0 purchase
+    cohort_sizes = (
+        df[df["months_since_first"] == 0]
+        .groupby("cohort_month")["customer_id"]
+        .nunique()
+    )
 
-            repeat_within_window = df[
-                (df['customer_id'].isin(cohort_customers)) &
-                (df['is_repeat_purchase']) &
-                (df['createdate'] >= cohort_start) &
-                (df['createdate'] <= window_end)
-            ]['customer_id'].nunique()
+    cohort_matrix = pd.DataFrame({"size": cohort_sizes})
 
-            repeat_counts.append(repeat_within_window)
+    # Build m1, m2, m3, … m12 retention
+    for m in range(1, max_months + 1):
+        retained = (
+            df[df["months_since_first"] == m]
+            .groupby("cohort_month")["customer_id"]
+            .nunique()
+        )
 
-        cohorts[f'repeat_within_{window_months}m'] = repeat_counts
-        cohorts[f'repeat_rate_{window_months}m_%'] = (
-            cohorts[f'repeat_within_{window_months}m'] / cohorts['customers'] * 100
-        ).round(2)
+        cohort_matrix[f"m{m}"] = (
+            (retained / cohort_sizes) * 100
+        ).round(1)
 
-    # Convert cohort_month back to string for display
-    cohorts['cohort_month'] = cohorts['cohort_month'].astype(str)
+    cohort_matrix.index = cohort_matrix.index.astype(str)
 
-    print(f"\n✓ Cohort analytics built")
-    print(f"  Cohorts (months): {len(cohorts)}")
-    print(f"  Date range: {cohorts['cohort_month'].min()} to {cohorts['cohort_month'].max()}")
-    print(f"  Retention windows: {windows} months")
+    print(f"✓ Full cohort analysis built ({max_months} months)")
 
-    return cohorts
+    return cohort_matrix.reset_index().rename(columns={"index": "cohort_month"})

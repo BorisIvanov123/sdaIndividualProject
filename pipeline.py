@@ -198,7 +198,7 @@ def main():
         order_header_df = identify_customers(order_header_df, customer_col='cust_email')
         order_header_df = classify_orders(order_header_df)
         repeat_metrics = calculate_repeat_metrics(order_header_df)
-        cohort_df = build_cohort_analysis(order_header_df, windows=[3, 6])
+        cohort_df = build_cohort_analysis(order_header_df, max_months=12)
 
 
         # ====================================================================

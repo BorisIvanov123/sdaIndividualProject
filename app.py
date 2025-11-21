@@ -19,7 +19,7 @@ PAGES = {
     "Country KPIs": country_render,
     "Seasonality": seasonality_render,
     "Funnel": funnel_render,
-    "Repeat Buyers": repeat_render,   # ✔ uses correct handler
+    "Repeat Buyers": repeat_render,
     "Forecast (DL)": forecast_render,
 }
 
