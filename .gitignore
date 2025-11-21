@@ -1,32 +1,22 @@
 # ======================================================
-# DATA HANDLING (correct for Streamlit deployment)
+# DATA CONTROL
 # ======================================================
 
-# Ignore all raw data, but keep folder
+# Ignore ALL CSV files everywhere
+*.csv
+
+# Ignore raw data entirely
 data/raw_data/*
 !data/raw_data/.gitkeep
 
-# Keep processed data in Git (so Streamlit Cloud/Render can read it)
+# Keep processed data folder (for Parquet)
 !data/processed_data/
 !data/processed_data/**
+# But ignore any CSV inside processed_data too
+data/processed_data/*.csv
 
-# ======================================================
-# FILE TYPES
-# ======================================================
-
-# Excel files
-*.xlsx
-*.xls
-
-# Logs
-*.log
-
-# Jupyter Notebook
-.ipynb_checkpoints
-
-# Environment variables
-.env
-.env.local
+# Keep Parquet files
+!data/processed_data/*.parquet
 
 # ======================================================
 # PYTHON / BUILD FILES
@@ -59,8 +49,16 @@ ENV/
 .venv
 
 # ======================================================
-# IDE
+# NOTEBOOK / LOGS
 # ======================================================
+.ipynb_checkpoints/
+*.log
+
+# ======================================================
+# SYSTEM / EDITOR FILES
+# ======================================================
+
+# VS Code / JetBrains
 .vscode/
 .idea/
 *.swp
@@ -77,5 +75,11 @@ Thumbs.db
 ehthumbs.db
 Desktop.ini
 
-# Additional directories
+# ======================================================
+# OTHER
+# ======================================================
 clean_data/
+
+# Environment variables
+.env
+.env.local
