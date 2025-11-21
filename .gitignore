@@ -1,15 +1,36 @@
-# --- Ignore all raw data ---
+# ======================================================
+# DATA HANDLING (correct for Streamlit deployment)
+# ======================================================
+
+# Ignore all raw data, but keep folder
 data/raw_data/*
 !data/raw_data/.gitkeep
 
-# --- Keep processed data (needed for the Streamlit app) ---
-!data/processed_data/*
+# Keep processed data in Git (so Streamlit Cloud/Render can read it)
+!data/processed_data/
+!data/processed_data/**
 
-# Excel files (in case you have any)
+# ======================================================
+# FILE TYPES
+# ======================================================
+
+# Excel files
 *.xlsx
 *.xls
 
-# Python
+# Logs
+*.log
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Environment variables
+.env
+.env.local
+
+# ======================================================
+# PYTHON / BUILD FILES
+# ======================================================
 __pycache__/
 *.py[cod]
 *$py.class
@@ -31,17 +52,15 @@ wheels/
 .installed.cfg
 *.egg
 
-# Jupyter Notebook
-.ipynb_checkpoints
-*.ipynb_checkpoints
-
 # Virtual environments
 venv/
 env/
 ENV/
 .venv
 
+# ======================================================
 # IDE
+# ======================================================
 .vscode/
 .idea/
 *.swp
@@ -60,10 +79,3 @@ Desktop.ini
 
 # Additional directories
 clean_data/
-
-# Logs
-*.log
-
-# Environment variables
-.env
-.env.local
