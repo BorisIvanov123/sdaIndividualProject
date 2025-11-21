@@ -1,34 +1,28 @@
-# app_sections/country_kpis/render.py
-
 import streamlit as st
 import pandas as pd
 
 # Global components
 from app_components.cards import metric_card
 from app_components.tables import data_table
-
-# Layout components
 from app_components.layout import centered_title
 
-# Local components
+# Local intro HTML
 from .components.country_kpis_intro_html import FULL_COUNTRY_KPIS_HTML
+
+# Local chart components
+from .components.charts.revenue_orders_chart import revenue_orders_chart
+from .components.charts.cvr_chart import cvr_chart
 
 
 def render(country_kpis: pd.DataFrame):
     """
-    Render the Country KPIs section with metrics, table, and charts.
-    Uses reusable components from app_components.
-
-    Args:
-        country_kpis: DataFrame containing country-level KPI data
+    Render the Country KPIs section using modular components.
     """
 
     # =======================
     # PAGE HEADER
     # =======================
     centered_title("🌍 Country KPIs")
-
-    # Full long intro box
     st.markdown(FULL_COUNTRY_KPIS_HTML, unsafe_allow_html=True)
 
     # =======================
@@ -38,10 +32,9 @@ def render(country_kpis: pd.DataFrame):
         st.warning("⚠️ Country KPI dataset is empty or missing.")
         return
 
-    # Work on a copy
+    # Work on copy
     df = country_kpis.copy()
 
-    # Sort by revenue (default behavior)
     if "revenue_eur" in df.columns:
         df = df.sort_values("revenue_eur", ascending=False)
 
@@ -73,22 +66,23 @@ def render(country_kpis: pd.DataFrame):
     st.markdown("<br>", unsafe_allow_html=True)
 
     # =======================
-    # CHARTS
+    # CHARTS (modularised)
     # =======================
-    st.markdown("### 📊 Revenue & Orders by Country")
+    # =======================
+    # CHARTS (modularised)
+    # =======================
+    df_indexed = df.set_index("country")
 
-    chart_df = df.set_index("country")
+    st.markdown("### 📊 Choose Metric to Visualize")
+    metric_choice = st.selectbox(
+        "Select a metric:",
+        options=["revenue_eur", "orders"],
+        format_func=lambda x: "Revenue (€)" if x == "revenue_eur" else "Orders"
+    )
 
-    # Revenue + Orders bar chart
-    numeric_cols = [c for c in ["revenue_eur", "orders"] if c in chart_df.columns]
-    if numeric_cols:
-        st.bar_chart(chart_df[numeric_cols])
+    revenue_orders_chart(df_indexed, metric_choice)
 
     st.markdown("<br>", unsafe_allow_html=True)
 
-    # CVR Line Chart
-    if "cvr" in chart_df.columns:
-        st.markdown("### 📈 Conversion Rate (CVR) by Country")
-        cvr_chart = chart_df[["cvr"]].copy()
-        cvr_chart["CVR %"] = cvr_chart["cvr"] * 100
-        st.line_chart(cvr_chart[["CVR %"]])
+    cvr_chart(df_indexed)
+
