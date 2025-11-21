@@ -1,85 +1,56 @@
 # ======================================================
-# DATA CONTROL
+# IGNORE ALL CSV FILES (raw + processed)
 # ======================================================
 
-# Ignore ALL CSV files everywhere
 *.csv
+!data/raw_data/.gitkeep
+!data/processed_data/.gitkeep
 
-# Ignore raw data entirely
+# Keep Parquet files
+*.parquet
+
+# ======================================================
+# DATA DIRECTORIES
+# ======================================================
+
+# Ignore raw data
 data/raw_data/*
 !data/raw_data/.gitkeep
 
-# Keep processed data folder (for Parquet)
+# Keep processed Parquet files
 !data/processed_data/
-!data/processed_data/**
-# But ignore any CSV inside processed_data too
-data/processed_data/*.csv
-
-# Keep Parquet files
-!data/processed_data/*.parquet
+!data/processed_data/**/*.parquet
 
 # ======================================================
-# PYTHON / BUILD FILES
+# PYTHON / ENV / BUILD
 # ======================================================
+
 __pycache__/
 *.py[cod]
 *$py.class
 *.so
-.Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
+
+.env
+.env.local
 
 # Virtual environments
 venv/
 env/
 ENV/
-.venv
+.venv/
+
+# Build + dist
+build/
+dist/
+.eggs/
+*.egg-info/
 
 # ======================================================
-# NOTEBOOK / LOGS
+# JUPYTER / EDITOR / OS GARBAGE
 # ======================================================
+
 .ipynb_checkpoints/
-*.log
-
-# ======================================================
-# SYSTEM / EDITOR FILES
-# ======================================================
-
-# VS Code / JetBrains
 .vscode/
 .idea/
-*.swp
-*.swo
-*~
-
-# macOS
 .DS_Store
-.AppleDouble
-.LSOverride
-
-# Windows
 Thumbs.db
-ehthumbs.db
-Desktop.ini
-
-# ======================================================
-# OTHER
-# ======================================================
-clean_data/
-
-# Environment variables
-.env
-.env.local
