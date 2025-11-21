@@ -9,7 +9,8 @@ from app_components.tables import data_table
 from .components.charts.monthly_chart import prepare_monthly_data, monthly_chart
 from .components.charts.yoy_mom_charts import yoy_chart, mom_chart
 from .components.charts.seasonal_decomposition_chart import seasonal_decomposition_chart
-from .components.charts.seasonal_heatmap import seasonal_heatmap   # <-- NEW IMPORT
+from .components.charts.seasonal_heatmap import seasonal_heatmap
+from .components.charts.anomaly_detection_chart import anomaly_detection_chart
 from .components.seasonality_intro_html import FULL_SEASONALITY_HTML
 
 
@@ -59,13 +60,13 @@ def render(order_header_df: pd.DataFrame):
     st.markdown("<br><hr><br>", unsafe_allow_html=True)
 
     # =======================
-    # SECOND SELECTOR — YoY / MoM / HEATMAP
+    # SECOND SELECTOR — YoY / MoM / Heatmap / Anomaly Detection
     # =======================
     st.markdown("### 📊 Additional Seasonal Analysis")
 
     second_choice = st.selectbox(
         "Additional Analysis",
-        ["YoY Comparison", "MoM % Change", "Seasonal Heatmap"],
+        ["YoY Comparison", "MoM % Change", "Seasonal Heatmap", "Anomaly Detection"],
         index=0
     )
 
@@ -77,5 +78,8 @@ def render(order_header_df: pd.DataFrame):
 
     elif second_choice == "Seasonal Heatmap":
         seasonal_heatmap(monthly, main_metric)
+
+    elif second_choice == "Anomaly Detection":
+        anomaly_detection_chart(monthly, main_metric)
 
     st.markdown("<br>", unsafe_allow_html=True)
