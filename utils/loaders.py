@@ -1,9 +1,18 @@
 from pathlib import Path
 import pandas as pd
+import os
 
 DATA_ROOT = Path("data")
 
 def load_all_data():
+    print("=== STREAMLIT DEBUG START ===")
+    print("PWD:", os.getcwd())
+    print("ROOT FILES:", os.listdir("."))
+    if os.path.exists("data"):
+        print("data/:", os.listdir("data"))
+    if os.path.exists("data/processed_data"):
+        print("processed_data/:", os.listdir("data/processed_data"))
+    print("=== STREAMLIT DEBUG END ===")
     base_processed = DATA_ROOT / "processed_data"
     base_raw = DATA_ROOT / "raw_data"
 
