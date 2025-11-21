@@ -1,13 +1,15 @@
+# app_sections/overview/render.py
+
 import streamlit as st
 
 # Global components
 from app_components.cards import metric_card
 from app_components.tables import data_table
 
-# Local components (overview page)
-from .components.layout import centered_title
-from .components.intro import intro_section
-
+# Local components
+from app_components.layout import centered_title
+from app_components.intro import intro_section
+from .components.overview_intro_html import FULL_OVERVIEW_HTML
 
 def render(order_header_df, sessions):
 
@@ -15,7 +17,9 @@ def render(order_header_df, sessions):
     # PAGE HEADER
     # =======================
     centered_title("📊 Overview")
-    intro_section()
+
+    # Full long intro box
+    st.markdown(FULL_OVERVIEW_HTML, unsafe_allow_html=True)
 
     # =======================
     # KPI CARDS

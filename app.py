@@ -3,9 +3,9 @@
 import streamlit as st
 from utils.loaders import load_all_data
 
-# Correct imports: point to the file, not the folder
+# Correct imports: import the render function from each section's render.py file
 from app_sections.overview.render import render as overview_render
-from app_sections.country_kpis import render as country_render
+from app_sections.country_kpis.render import render as country_render
 from app_sections.seasonality import render as seasonality_render
 from app_sections.funnel import render as funnel_render
 from app_sections.repeat_buyers import render as repeat_render

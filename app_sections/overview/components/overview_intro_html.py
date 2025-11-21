@@ -1,7 +1,6 @@
-import streamlit as st
+# app_sections/overview/components/overview_intro_html.py
 
-def intro_section():
-    html = """
+FULL_OVERVIEW_HTML = """
 <div style="max-width:900px; margin:auto; padding:25px;
             background-color:rgba(255,255,255,0.04);
             border-radius:12px; margin-bottom:25px;">
@@ -65,4 +64,3 @@ def intro_section():
 
 </div>
 """
-    st.markdown(html, unsafe_allow_html=True)
